@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cuadreletras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=IBM+Plex+Mono:wght@500&family=Literata:opsz,wght@7..72,600&family=Nunito:wght@700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --surface: #fffdf8;
+      --ink: #1c2822;
+      --muted: #5e675f;
+      --moss: #215c43;
+      --line: #e4dccb;
+      --display: "Fraunces", Georgia, serif;
+      --sans: "Outfit", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html, body { margin: 0; background: var(--bg); color: var(--ink); }
+    body {
+      font-family: var(--sans);
+      font-size: 1rem;
+      line-height: 1.5;
+      min-height: 100dvh;
+    }
+    button, input, select { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    :focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 20px 16px 40px; }
+    header { display: flex; gap: 14px; align-items: center; margin-bottom: 18px; }
+    .mark { width: 40px; height: 40px; flex: none; }
+    h1 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 1.85rem;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+    .sub { margin: 2px 0 0; color: var(--muted); }
+    .studio { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 16px; align-items: start; }
+    .panel, .stage {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+    }
+    fieldset { border: 0; margin: 0 0 16px; padding: 0; }
+    legend {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    label { display: block; font-weight: 600; }
+    .hint, .file-name, .status { color: var(--muted); margin: 8px 0 0; font-size: 0.92rem; }
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      height: 44px;
+      margin-top: 4px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg);
+      font-size: 1rem;
+    }
+    .add { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+    .add button, .actions button, .ghost, .file-btn, #alert-ok {
+      height: 44px;
+      border-radius: 12px;
+      padding: 0 14px;
+      border: 0;
+      background: var(--moss);
+      color: var(--bg);
+      font-weight: 700;
+    }
+    .ghost, .file-btn {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      font-weight: 600;
+    }
+    .row-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      max-width: 100%;
+      padding: 6px 8px 6px 12px;
+      border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      overflow-wrap: anywhere;
+    }
+    .chip-x {
+      width: 32px;
+      height: 32px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--ink);
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+    .count { color: var(--muted); font-weight: 500; }
+    .seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .seg label, .mode label {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .seg input, .mode input[type="radio"] { position: absolute; opacity: 0; inset: 0; margin: 0; }
+    .seg label:has(input:checked), .mode label:has(input:checked) {
+      background: var(--moss);
+      color: var(--bg);
+      border-color: var(--moss);
+    }
+    .mode { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      font-weight: 600;
+    }
+    .check input { width: 1.15rem; height: 1.15rem; accent-color: var(--moss); }
+    .color-row { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+    input[type="color"] { width: 52px; height: 44px; padding: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .canvas-wrap { width: 100%; }
+    canvas { width: 100%; height: auto; display: block; border-radius: 12px; }
+    .stage-top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; margin-bottom: 8px; }
+    .stage-top h2 { font-family: var(--display); font-size: 1.35rem; font-weight: 600; margin: 0; }
+    #dirty { color: var(--moss); font-weight: 700; }
+    .alert-back {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(28, 40, 34, 0.45);
+    }
+    .alert-card {
+      width: min(100%, 420px);
+      background: var(--surface);
+      color: var(--ink);
+      border-radius: 18px;
+      padding: 20px;
+      border: 1px solid var(--line);
+    }
+    .alert-card h2 { font-family: var(--display); font-size: 1.6rem; margin: 0 0 8px; }
+    .alert-card p { margin: 0; white-space: pre-wrap; }
+    #alert-ok { width: 100%; margin-top: 16px; }
+    @media (min-width: 700px) {
+      .alert-back { align-items: center; }
+    }
+    @media (max-width: 800px) {
+      .studio { grid-template-columns: 1fr; }
+      .stage { order: -1; }
+      h1 { font-size: 1.6rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <svg class="mark" viewBox="0 0 36 36" aria-hidden="true">
+        <rect x="1" y="1" width="10" height="10" rx="2" fill="var(--line)"/>
+        <rect x="13" y="1" width="10" height="10" rx="2" fill="var(--moss)"/>
+        <rect x="25" y="1" width="10" height="10" rx="2" fill="var(--line)"/>
+        <rect x="1" y="13" width="10" height="10" rx="2" fill="var(--line)"/>
+        <rect x="13" y="13" width="10" height="10" rx="2" fill="var(--ink)"/>
+        <rect x="25" y="13" width="10" height="10" rx="2" fill="var(--line)"/>
+        <rect x="1" y="25" width="10" height="10" rx="2" fill="var(--line)"/>
+        <rect x="13" y="25" width="10" height="10" rx="2" fill="var(--line)"/>
+        <rect x="25" y="25" width="10" height="10" rx="2" fill="var(--moss)"/>
+      </svg>
+      <div>
+        <h1>Cuadreletras</h1>
+        <p class="sub">Creador de sopas de letras</p>
+      </div>
+    </header>
+    <div class="studio">
+      <section class="panel">
+        <fieldset>
+          <legend>Tamaño</legend>
+          <div class="pair">
+            <label>Ancho X
+              <input id="cols" type="number" min="6" inputmode="numeric" value="10" />
+            </label>
+            <label>Alto Y
+              <input id="rows" type="number" min="6" inputmode="numeric" value="10" />
+            </label>
+          </div>
+          <p class="hint" id="fit-hint"></p>
+        </fieldset>
+        <fieldset>
+          <legend>Palabras</legend>
+          <div class="add">
+            <label>Nueva palabra
+              <input id="word" type="text" placeholder="Gato, 🐱, niño…" autocomplete="off" enterkeyhint="done" />
+            </label>
+            <button type="button" id="add">Añadir</button>
+          </div>
+          <p class="hint">Cualquier carácter unicode, emojis incluidos. Sin espacios. Varias a la vez: sepáralas con comas.</p>
+          <div id="chips" class="chips"></div>
+          <div class="row-btns">
+            <button type="button" class="ghost" id="example">Ejemplo</button>
+            <button type="button" class="ghost" id="clear">Vaciar</button>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Imagen</legend>
+          <label>Título
+            <input id="title" type="text" value="Sopa de letras" />
+          </label>
+          <label style="margin-top:10px">Fuente
+            <select id="font">
+              <option value="Fraunces">Fraunces</option>
+              <option value="Outfit">Outfit</option>
+              <option value="Literata">Literata</option>
+              <option value="IBM Plex Mono">IBM Plex Mono</option>
+              <option value="Nunito">Nunito</option>
+            </select>
+          </label>
+          <p class="hint">Formato al exportar</p>
+          <div class="seg" role="radiogroup" aria-label="Formato de imagen">
+            <label>PNG<input type="radio" name="format" value="png" checked /></label>
+            <label>JPG<input type="radio" name="format" value="jpeg" /></label>
+            <label>WEBP<input type="radio" name="format" value="webp" /></label>
+          </div>
+          <p class="hint">Fondo</p>
+          <div class="mode" role="radiogroup" aria-label="Tipo de fondo">
+            <label>Color<input type="radio" name="bgmode" id="bg-color-mode" value="color" checked /></label>
+            <label>Imagen<input type="radio" name="bgmode" id="bg-image-mode" value="image" /></label>
+          </div>
+          <div class="color-row" id="bg-color-row">
+            <input id="bg-color" type="color" value="#f7f3ea" aria-label="Color de fondo" />
+            <span>Color uniforme</span>
+          </div>
+          <div id="bg-file-row" hidden>
+            <div class="row-btns">
+              <button type="button" class="file-btn" id="pick-file">Subir imagen</button>
+              <button type="button" class="ghost" id="drop-file">Quitar</button>
+            </div>
+            <input id="file" type="file" accept="image/*" hidden />
+            <p class="file-name" id="file-name">Ninguna imagen todavía.</p>
+          </div>
+          <div class="color-row">
+            <input id="letter-color" type="color" value="#1c2822" aria-label="Color de las letras" />
+            <span>Color de las letras</span>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Opciones</legend>
+          <label class="check"><input id="diagonals" type="checkbox" checked /> Diagonales</label>
+          <label class="check"><input id="reverse" type="checkbox" checked /> Palabras al revés</label>
+          <label class="check"><input id="include-list" type="checkbox" checked /> Lista de palabras en la imagen</label>
+          <label class="check"><input id="solution" type="checkbox" /> Marcar la solución</label>
+        </fieldset>
+        <div class="actions">
+          <button type="button" id="generate">Generar sopa</button>
+          <button type="button" id="export">Exportar imagen</button>
+        </div>
+      </section>
+      <section class="stage">
+        <div class="stage-top">
+          <h2>Vista previa</h2>
+          <p class="status" id="dirty" hidden>Cambios sin generar</p>
+        </div>
+        <div class="canvas-wrap" id="canvas-wrap">
+          <canvas id="view" aria-label="Sopa de letras"></canvas>
+        </div>
+        <p class="status" id="status" aria-live="polite"></p>
+      </section>
+    </div>
+  </div>
+  <div id="alert" class="alert-back" hidden>
+    <div class="alert-card" role="alertdialog" aria-modal="true" aria-labelledby="alert-title" aria-describedby="alert-body">
+      <h2 id="alert-title">Aviso</h2>
+      <p id="alert-body"></p>
+      <button type="button" id="alert-ok">Entendido</button>
+    </div>
+  </div>
+  <script>
+    const SPANISH = Array.from("ABCDEFGHIJKLMNÑOPQRSTUVWXYZ");
+    const ALL_DIRS = [
+      { dr: 0, dc: 1, back: false },
+      { dr: 1, dc: 0, back: false },
+      { dr: 1, dc: 1, back: false },
+      { dr: 1, dc: -1, back: false },
+      { dr: 0, dc: -1, back: true },
+      { dr: -1, dc: 0, back: true },
+      { dr: -1, dc: -1, back: true },
+      { dr: -1, dc: 1, back: true },
+    ];
+    const DEFAULTS = ["GATO", "PERRO", "LUNA", "SOL", "CASA", "MAR", "FLOR", "NIÑO"];
+    const KEY = "cuadreletras-v1";
+
+    const $ = (id) => document.getElementById(id);
+    const state = {
+      cols: 10,
+      rows: 10,
+      words: [],
+      font: "Fraunces",
+      format: "png",
+      bgMode: "color",
+      bgColor: "#f7f3ea",
+      letterColor: "#1c2822",
+      diagonals: true,
+      reverse: true,
+      includeList: true,
+      showSolution: false,
+      title: "Sopa de letras",
+      bgImage: null,
+    };
+    let puzzle = null;
+
+    function graphemes(text) {
+      const seg = new Intl.Segmenter("es", { granularity: "grapheme" });
+      return Array.from(seg.segment(text), (part) => part.segment);
+    }
+
+    function normalize(raw) {
+      const trimmed = String(raw ?? "").trim();
+      if (!trimmed) return { ok: false, reason: "empty" };
+      if (/\p{White_Space}/u.test(trimmed)) return { ok: false, reason: "space" };
+      const glyphs = [];
+      for (const g of graphemes(trimmed)) glyphs.push(...graphemes(g.toLocaleUpperCase("es-ES")));
+      if (!glyphs.length) return { ok: false, reason: "empty" };
+      return { ok: true, display: glyphs.join(""), glyphs };
+    }
+
+    function dirsOf(diag, rev) {
+      return ALL_DIRS.filter((d) => {
+        const diagonal = d.dr !== 0 && d.dc !== 0;
+        if (diagonal && !diag) return false;
+        if (d.back && !rev) return false;
+        return true;
+      });
+    }
+
+    function maxLen(rows, cols, dirs) {
+      let max = 0;
+      for (const d of dirs) {
+        const limit = d.dr === 0 ? cols : d.dc === 0 ? rows : Math.min(rows, cols);
+        if (limit > max) max = limit;
+      }
+      return max;
+    }
+
+    function currentDirs() {
+      return dirsOf(state.diagonals, state.reverse);
+    }
+
+    function aviso(text) {
+      $("alert-body").textContent = text;
+      $("alert").hidden = false;
+      $("alert-ok").focus();
+    }
+
+    function closeAviso() {
+      $("alert").hidden = true;
+    }
+
+    function shuffle(list) {
+      for (let i = list.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = list[i];
+        list[i] = list[j];
+        list[j] = tmp;
+      }
+      return list;
+    }
+
+    function fits(grid, glyphs, r, c, d, rows, cols) {
+      for (let i = 0; i < glyphs.length; i++) {
+        const rr = r + d.dr * i;
+        const cc = c + d.dc * i;
+        if (rr < 0 || cc < 0 || rr >= rows || cc >= cols) return false;
+        const cell = grid[rr][cc];
+        if (cell && cell !== glyphs[i]) return false;
+      }
+      return true;
+    }
+
+    function writeWord(grid, glyphs, r, c, d) {
+      for (let i = 0; i < glyphs.length; i++) grid[r + d.dr * i][c + d.dc * i] = glyphs[i];
+    }
+
+    function placeWord(grid, word, rows, cols, dirs) {
+      const glyphs = word.glyphs;
+      const candidates = [];
+      const exhaustive = rows * cols * dirs.length <= 4000;
+      if (exhaustive) {
+        for (const d of dirs) {
+          for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+              if (fits(grid, glyphs, r, c, d, rows, cols)) candidates.push({ r, c, d });
+            }
+          }
+        }
+      } else {
+        for (let i = 0; i < 700 && candidates.length < 30; i++) {
+          const d = dirs[Math.floor(Math.random() * dirs.length)];
+          const r = Math.floor(Math.random() * rows);
+          const c = Math.floor(Math.random() * cols);
+          if (fits(grid, glyphs, r, c, d, rows, cols)) candidates.push({ r, c, d });
+        }
+      }
+      if (!candidates.length) return null;
+      const pick = shuffle(candidates)[0];
+      writeWord(grid, glyphs, pick.r, pick.c, pick.d);
+      return {
+        display: word.display,
+        glyphs,
+        row: pick.r,
+        col: pick.c,
+        dr: pick.d.dr,
+        dc: pick.d.dc,
+      };
+    }
+
+    function fillerPool(words) {
+      const extras = [];
+      for (const w of words) {
+        for (const g of w.glyphs) {
+          if (!/^\p{L}$/u.test(g)) extras.push(g);
+        }
+      }
+      const uniq = Array.from(new Set(extras));
+      if (!uniq.length) return SPANISH;
+      if (uniq.length < 6) return uniq.concat(SPANISH);
+      return uniq;
+    }
+
+    function generatePuzzle() {
+      const rows = state.rows;
+      const cols = state.cols;
+      const dirs = currentDirs();
+      const sorted = state.words.slice().sort((a, b) => b.glyphs.length - a.glyphs.length);
+      let best = null;
+      for (let attempt = 0; attempt < 20; attempt++) {
+        const grid = Array.from({ length: rows }, () => Array(cols).fill(null));
+        const placements = [];
+        let ok = true;
+        for (const word of sorted) {
+          const placed = placeWord(grid, word, rows, cols, dirs);
+          if (!placed) {
+            ok = false;
+            break;
+          }
+          placements.push(placed);
+        }
+        if (ok) {
+          const pool = fillerPool(sorted);
+          for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+              if (!grid[r][c]) grid[r][c] = pool[Math.floor(Math.random() * pool.length)];
+            }
+          }
+          return { grid, placements, rows, cols, failed: [] };
+        }
+        if (!best || placements.length > best.placements.length) {
+          const have = new Set(placements.map((p) => p.display));
+          best = {
+            placements,
+            failed: sorted.filter((w) => !have.has(w.display)).map((w) => w.display),
+          };
+        }
+      }
+      return best || { grid: null, placements: [], rows, cols, failed: sorted.map((w) => w.display) };
+    }
+
+    function withAlpha(hex, alpha) {
+      const h = String(hex || "#1c2822").replace("#", "");
+      const full = h.length === 3 ? h.split("").map((ch) => ch + ch).join("") : h;
+      const n = Number.parseInt(full, 16);
+      if (!Number.isFinite(n)) return `rgba(28,40,34,${alpha})`;
+      return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${alpha})`;
+    }
+
+    function drawCover(ctx, img, w, h) {
+      const ir = img.naturalWidth / img.naturalHeight;
+      const r = w / h;
+      let dw;
+      let dh;
+      let dx;
+      let dy;
+      if (ir > r) {
+        dh = h;
+        dw = h * ir;
+        dx = (w - dw) / 2;
+        dy = 0;
+      } else {
+        dw = w;
+        dh = w / ir;
+        dx = 0;
+        dy = (h - dh) / 2;
+      }
+      ctx.drawImage(img, dx, dy, dw, dh);
+    }
+
+    function ellipsize(ctx, text, max) {
+      if (ctx.measureText(text).width <= max) return text;
+      let out = text;
+      while (out.length > 1 && ctx.measureText(out + "…").width > max) out = out.slice(0, -1);
+      return out + "…";
+    }
+
+    function wrapList(ctx, words, max) {
+      const lines = [];
+      let line = "";
+      for (const word of words) {
+        const next = line ? line + "   ·   " + word : word;
+        if (ctx.measureText(next).width <= max || !line) line = next;
+        else {
+          lines.push(line);
+          line = word;
+        }
+      }
+      if (line) lines.push(line);
+      return lines;
+    }
+
+    function render(canvas, fitWidth, dpr) {
+      if (!puzzle || !puzzle.grid) return;
+      const rows = puzzle.rows;
+      const cols = puzzle.cols;
+      const exporting = !fitWidth;
+      let pad = exporting ? 48 : Math.max(16, Math.round(fitWidth * 0.04));
+      let cell = exporting ? 56 : Math.floor((fitWidth - pad * 2) / cols);
+      if (exporting) {
+        while (pad * 2 + cell * Math.max(cols, rows) > 4096 && cell > 16) cell -= 2;
+      } else if (cell < 8) {
+        pad = 8;
+        cell = Math.max(4, Math.floor((fitWidth - pad * 2) / cols));
+      } else {
+        cell = Math.min(cell, 64);
+      }
+      const gridW = cell * cols;
+      const gridH = cell * rows;
+      const width = exporting ? gridW + pad * 2 : fitWidth;
+      const title = state.title.trim();
+      const titleSize = title ? Math.max(18, Math.round(cell * 0.72)) : 0;
+      const titleBlock = title ? titleSize + pad * 0.45 : pad * 0.25;
+      const listFont = Math.max(12, Math.round(cell * 0.34));
+      const ctx0 = canvas.getContext("2d");
+      ctx0.font = `600 ${listFont}px "${state.font}", sans-serif`;
+      const lines = state.includeList ? wrapList(ctx0, puzzle.placements.map((p) => p.display), gridW) : [];
+      const listBlock = lines.length ? pad * 0.35 + lines.length * listFont * 1.45 : pad * 0.35;
+      const height = Math.ceil(pad * 0.55 + titleBlock + gridH + listBlock + pad * 0.3);
+      const ratio = dpr || 1;
+      canvas.width = Math.max(1, Math.round(width * ratio));
+      canvas.height = Math.max(1, Math.round(height * ratio));
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      if (state.bgImage && state.bgImage.complete && state.bgImage.naturalWidth) {
+        drawCover(ctx, state.bgImage, width, height);
+        ctx.fillStyle = "rgba(247,243,234,0.8)";
+        ctx.fillRect(0, 0, width, height);
+      } else {
+        ctx.fillStyle = state.bgColor;
+        ctx.fillRect(0, 0, width, height);
+      }
+      let y = pad * 0.4;
+      if (title) {
+        ctx.fillStyle = state.letterColor;
+        ctx.font = `650 ${titleSize}px "${state.font}", Georgia, serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText(ellipsize(ctx, title, width - pad * 2), width / 2, y);
+      }
+      y += titleBlock;
+      const ox = Math.round((width - gridW) / 2);
+      const oy = y;
+      if (state.showSolution) {
+        ctx.save();
+        ctx.lineCap = "round";
+        ctx.strokeStyle = "rgba(33,92,67,0.35)";
+        ctx.fillStyle = "rgba(33,92,67,0.35)";
+        ctx.lineWidth = cell * 0.68;
+        for (const p of puzzle.placements) {
+          const x1 = ox + p.col * cell + cell / 2;
+          const y1 = oy + p.row * cell + cell / 2;
+          if (p.glyphs.length === 1) {
+            ctx.beginPath();
+            ctx.arc(x1, y1, cell * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            const x2 = ox + (p.col + p.dc * (p.glyphs.length - 1)) * cell + cell / 2;
+            const y2 = oy + (p.row + p.dr * (p.glyphs.length - 1)) * cell + cell / 2;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+      }
+      ctx.lineWidth = Math.max(1, cell * 0.025);
+      ctx.strokeStyle = withAlpha(state.letterColor, 0.22);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const x = ox + c * cell;
+          const yy = oy + r * cell;
+          ctx.strokeRect(x + 0.5, yy + 0.5, cell - 1, cell - 1);
+          const g = puzzle.grid[r][c] || "";
+          const emoji = /\p{Extended_Pictographic}/u.test(g);
+          const size = Math.max(8, Math.floor(cell * (emoji ? 0.58 : 0.5)));
+          ctx.fillStyle = state.letterColor;
+          ctx.font = `600 ${size}px "${state.font}", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
+          ctx.fillText(g, x + cell / 2, yy + cell / 2 + size * 0.04);
+        }
+      }
+      if (lines.length) {
+        ctx.fillStyle = state.letterColor;
+        ctx.font = `600 ${listFont}px "${state.font}", sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        let ly = oy + gridH + pad * 0.35;
+        for (const line of lines) {
+          ctx.fillText(line, width / 2, ly);
+          ly += listFont * 1.45;
+        }
+      }
+    }
+
+    async function redraw() {
+      const canvas = $("view");
+      const wrap = $("canvas-wrap");
+      if (!puzzle || !puzzle.grid) {
+        canvas.width = 0;
+        canvas.height = 0;
+        return;
+      }
+      if (document.fonts && document.fonts.load) {
+        try {
+          await document.fonts.load(`600 32px "${state.font}"`);
+        } catch (err) {
+          /* fallback font */
+        }
+      }
+      const width = Math.max(240, wrap.clientWidth || 320);
+      render(canvas, width, Math.min(2, window.devicePixelRatio || 1));
+    }
+
+    function updateHint() {
+      const max = maxLen(state.rows, state.cols, currentDirs());
+      $("fit-hint").textContent = `En ${state.cols}×${state.rows} caben palabras de hasta ${max} caracteres. Mínimo 6. Sin tope fijo: si el navegador no puede dibujarla, avisamos.`;
+    }
+
+    function markDirty() {
+      $("dirty").hidden = false;
+    }
+
+    function renderChips() {
+      const box = $("chips");
+      box.replaceChildren();
+      if (!state.words.length) {
+        const empty = document.createElement("p");
+        empty.className = "hint";
+        empty.textContent = "Todavía no hay palabras.";
+        box.append(empty);
+        return;
+      }
+      for (const word of state.words) {
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        const label = document.createElement("span");
+        label.textContent = word.display;
+        const count = document.createElement("span");
+        count.className = "count";
+        count.textContent = String(word.glyphs.length);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "chip-x";
+        btn.setAttribute("aria-label", "Quitar " + word.display);
+        btn.textContent = "×";
+        btn.addEventListener("click", () => {
+          state.words = state.words.filter((item) => item.display !== word.display);
+          renderChips();
+          save();
+          markDirty();
+        });
+        chip.append(label, count, btn);
+        box.append(chip);
+      }
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify({
+          cols: state.cols,
+          rows: state.rows,
+          words: state.words.map((w) => w.display),
+          font: state.font,
+          format: state.format,
+          bgMode: state.bgMode,
+          bgColor: state.bgColor,
+          letterColor: state.letterColor,
+          diagonals: state.diagonals,
+          reverse: state.reverse,
+          includeList: state.includeList,
+          showSolution: state.showSolution,
+          title: state.title,
+        }));
+      } catch (err) {
+        /* ignore quota */
+      }
+    }
+
+    function setWords(list) {
+      state.words = [];
+      for (const raw of list) {
+        const word = normalize(raw);
+        if (word.ok && !state.words.some((item) => item.display === word.display)) state.words.push(word);
+      }
+    }
+
+    function load() {
+      let data = null;
+      try {
+        data = JSON.parse(localStorage.getItem(KEY) || "null");
+      } catch (err) {
+        data = null;
+      }
+      if (!data || typeof data !== "object") {
+        setWords(DEFAULTS);
+        return;
+      }
+      const cols = Number(data.cols);
+      const rows = Number(data.rows);
+      if (Number.isInteger(cols) && cols >= 6 && cols <= 500) state.cols = cols;
+      if (Number.isInteger(rows) && rows >= 6 && rows <= 500) state.rows = rows;
+      if (state.cols * state.rows > 40000) {
+        state.cols = 10;
+        state.rows = 10;
+      }
+      if (Array.isArray(data.words) && data.words.length) setWords(data.words);
+      else setWords(DEFAULTS);
+      if (typeof data.font === "string") state.font = data.font;
+      if (data.format === "png" || data.format === "jpeg" || data.format === "webp") state.format = data.format;
+      if (data.bgMode === "color" || data.bgMode === "image") state.bgMode = data.bgMode;
+      if (typeof data.bgColor === "string") state.bgColor = data.bgColor;
+      if (typeof data.letterColor === "string") state.letterColor = data.letterColor;
+      state.diagonals = data.diagonals !== false;
+      state.reverse = data.reverse !== false;
+      state.includeList = data.includeList !== false;
+      state.showSolution = Boolean(data.showSolution);
+      if (typeof data.title === "string") state.title = data.title;
+      const max = maxLen(state.rows, state.cols, currentDirs());
+      state.words = state.words.filter((w) => w.glyphs.length <= max);
+    }
+
+    function syncForm() {
+      $("cols").value = String(state.cols);
+      $("rows").value = String(state.rows);
+      $("font").value = state.font;
+      $("title").value = state.title;
+      $("bg-color").value = state.bgColor;
+      $("letter-color").value = state.letterColor;
+      $("diagonals").checked = state.diagonals;
+      $("reverse").checked = state.reverse;
+      $("include-list").checked = state.includeList;
+      $("solution").checked = state.showSolution;
+      document.querySelector(`input[name="format"][value="${state.format}"]`).checked = true;
+      if (state.bgMode === "image") $("bg-image-mode").checked = true;
+      else $("bg-color-mode").checked = true;
+      syncBgRows();
+      $("font").style.fontFamily = `"${state.font}", sans-serif`;
+    }
+
+    function syncBgRows() {
+      const image = state.bgMode === "image";
+      $("bg-color-row").hidden = image;
+      $("bg-file-row").hidden = !image;
+    }
+
+    function sizeError(cols, rows) {
+      if (!Number.isInteger(cols) || !Number.isInteger(rows) || cols < 6 || rows < 6) {
+        return "El mínimo es 6×6. Escribe números enteros.";
+      }
+      if (cols > 500 || rows > 500) return "Para guardar la imagen, cada lado puede tener hasta 500 casillas.";
+      if (cols * rows > 40000) return `Esa sopa tiene ${cols * rows} casillas. El navegador dibuja hasta 40.000.`;
+      return "";
+    }
+
+    function commitSize() {
+      const cols = Number($("cols").value);
+      const rows = Number($("rows").value);
+      const problem = sizeError(cols, rows);
+      if (problem) {
+        aviso(problem);
+        $("cols").value = String(state.cols);
+        $("rows").value = String(state.rows);
+        return;
+      }
+      const max = maxLen(rows, cols, currentDirs());
+      const bad = state.words.filter((w) => w.glyphs.length > max);
+      if (bad.length) {
+        aviso(`No cabe en ${cols}×${rows}: ${bad.map((w) => `${w.display} (${w.glyphs.length})`).join(", ")}. El máximo sería ${max}.`);
+        $("cols").value = String(state.cols);
+        $("rows").value = String(state.rows);
+        return;
+      }
+      if (cols === state.cols && rows === state.rows) return;
+      state.cols = cols;
+      state.rows = rows;
+      save();
+      updateHint();
+      markDirty();
+    }
+
+    function addFromInput() {
+      const parts = /[,;\n]/.test($("word").value)
+        ? $("word").value.split(/[,;\n]+/).map((part) => part.trim()).filter(Boolean)
+        : [$("word").value];
+      const problems = [];
+      const max = maxLen(state.rows, state.cols, currentDirs());
+      let added = 0;
+      for (const part of parts) {
+        const word = normalize(part);
+        if (!word.ok && word.reason === "empty") {
+          problems.push("Escribe una palabra.");
+          continue;
+        }
+        if (!word.ok && word.reason === "space") {
+          problems.push("Las palabras no pueden llevar espacios. Sepáralas con comas.");
+          continue;
+        }
+        if (word.glyphs.length > max) {
+          problems.push(`«${word.display}» tiene ${word.glyphs.length} caracteres y en esta sopa de ${state.cols}×${state.rows} solo caben hasta ${max}.`);
+          continue;
+        }
+        if (state.words.some((item) => item.display === word.display)) {
+          problems.push(`«${word.display}» ya está en la lista.`);
+          continue;
+        }
+        state.words.push(word);
+        added += 1;
+      }
+      $("word").value = "";
+      if (added) {
+        renderChips();
+        save();
+        markDirty();
+      }
+      if (problems.length) aviso(Array.from(new Set(problems)).join("\n"));
+    }
+
+    function commitDirs() {
+      const diagonals = $("diagonals").checked;
+      const reverse = $("reverse").checked;
+      const max = maxLen(state.rows, state.cols, dirsOf(diagonals, reverse));
+      const bad = state.words.filter((w) => w.glyphs.length > max);
+      if (bad.length) {
+        $("diagonals").checked = state.diagonals;
+        $("reverse").checked = state.reverse;
+        aviso(`Si cambias las direcciones, no caben: ${bad.map((w) => w.display).join(", ")}. Máximo ${max}.`);
+        return;
+      }
+      state.diagonals = diagonals;
+      state.reverse = reverse;
+      save();
+      updateHint();
+      markDirty();
+    }
+
+    async function generate() {
+      if (!state.words.length) {
+        aviso("Añade al menos una palabra.");
+        puzzle = null;
+        $("status").textContent = "Sin palabras.";
+        redraw();
+        return;
+      }
+      puzzle = generatePuzzle();
+      $("dirty").hidden = true;
+      if (!puzzle.grid) {
+        aviso(`No pude colocar: ${puzzle.failed.join(", ")}. Agranda la sopa o quita alguna palabra.`);
+        $("status").textContent = "No se pudo generar.";
+        redraw();
+        return;
+      }
+      if (puzzle.failed.length) {
+        aviso(`Estas no cupieron y quedaron fuera: ${puzzle.failed.join(", ")}. Prueba una sopa más grande.`);
+      }
+      $("status").textContent = `${puzzle.placements.length} palabras en ${state.cols}×${state.rows}.`;
+      await redraw();
+    }
+
+    async function exportImage() {
+      if (!puzzle || !puzzle.grid) {
+        aviso("Genera la sopa antes de exportar.");
+        return;
+      }
+      if (document.fonts && document.fonts.ready) {
+        try { await document.fonts.ready; } catch (err) { /* continue */ }
+      }
+      const canvas = document.createElement("canvas");
+      render(canvas, 0, 1);
+      const mime = state.format === "jpeg" ? "image/jpeg" : state.format === "webp" ? "image/webp" : "image/png";
+      const ext = state.format === "jpeg" ? "jpg" : state.format;
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, mime, 0.92));
+      if (!blob) {
+        aviso("Este navegador no pudo crear ese formato. Prueba PNG.");
+        return;
+      }
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `sopa-de-letras.${ext}`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function readLook() {
+      state.font = $("font").value;
+      state.title = $("title").value;
+      state.bgColor = $("bg-color").value;
+      state.letterColor = $("letter-color").value;
+      state.includeList = $("include-list").checked;
+      state.showSolution = $("solution").checked;
+      const picked = document.querySelector('input[name="format"]:checked');
+      state.format = picked ? picked.value : "png";
+      state.bgMode = $("bg-image-mode").checked ? "image" : "color";
+      $("font").style.fontFamily = `"${state.font}", sans-serif`;
+      syncBgRows();
+      save();
+      redraw();
+    }
+
+    $("add").addEventListener("click", addFromInput);
+    $("word").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        addFromInput();
+      }
+    });
+    $("cols").addEventListener("change", commitSize);
+    $("rows").addEventListener("change", commitSize);
+    $("example").addEventListener("click", () => {
+      setWords(DEFAULTS);
+      const max = maxLen(state.rows, state.cols, currentDirs());
+      state.words = state.words.filter((w) => w.glyphs.length <= max);
+      renderChips();
+      save();
+      generate();
+    });
+    $("clear").addEventListener("click", () => {
+      state.words = [];
+      puzzle = null;
+      renderChips();
+      save();
+      $("dirty").hidden = true;
+      $("status").textContent = "Lista vacía.";
+      redraw();
+    });
+    $("diagonals").addEventListener("change", commitDirs);
+    $("reverse").addEventListener("change", commitDirs);
+    $("generate").addEventListener("click", () => { generate(); });
+    $("export").addEventListener("click", () => { exportImage(); });
+    for (const id of ["font", "title", "bg-color", "letter-color", "include-list", "solution"]) {
+      $(id).addEventListener("input", readLook);
+      $(id).addEventListener("change", readLook);
+    }
+    for (const input of document.querySelectorAll('input[name="format"], input[name="bgmode"]')) {
+      input.addEventListener("change", readLook);
+    }
+    $("pick-file").addEventListener("click", () => $("file").click());
+    $("drop-file").addEventListener("click", () => {
+      state.bgImage = null;
+      $("file").value = "";
+      $("file-name").textContent = "Ninguna imagen todavía.";
+      state.bgMode = "color";
+      $("bg-color-mode").checked = true;
+      syncBgRows();
+      save();
+      redraw();
+    });
+    $("file").addEventListener("change", () => {
+      const file = $("file").files && $("file").files[0];
+      if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        aviso("Elige un archivo de imagen.");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          state.bgImage = img;
+          state.bgMode = "image";
+          $("bg-image-mode").checked = true;
+          $("file-name").textContent = file.name;
+          syncBgRows();
+          save();
+          redraw();
+        };
+        img.onerror = () => aviso("No pude leer esa imagen.");
+        img.src = String(reader.result || "");
+      };
+      reader.readAsDataURL(file);
+    });
+    $("alert-ok").addEventListener("click", closeAviso);
+    $("alert").addEventListener("click", (event) => {
+      if (event.target === $("alert")) closeAviso();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !$("alert").hidden) closeAviso();
+    });
+
+    const wrap = $("canvas-wrap");
+    if (window.ResizeObserver) {
+      const observer = new ResizeObserver(() => { redraw(); });
+      observer.observe(wrap);
+    } else {
+      window.addEventListener("resize", () => { redraw(); });
+    }
+
+    load();
+    syncForm();
+    renderChips();
+    updateHint();
+    generate();
+  </script>
+</body>
+</html>
